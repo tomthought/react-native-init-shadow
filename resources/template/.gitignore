@@ -288,7 +288,7 @@ typings/
 # nuxt.js build output
 .nuxt
 
-# react / gatsby 
+# react / gatsby
 public/
 
 # vuepress build output
@@ -412,6 +412,8 @@ gradle-app.setting
 #
 # gitignore contributors: remember to update Global/Xcode.gitignore, Objective-C.gitignore & Swift.gitignore
 
+ios/Pods/
+
 ## User settings
 xcuserdata/
 
@@ -483,7 +485,7 @@ DerivedData/
 
 # nuxt.js build output
 
-# react / gatsby 
+# react / gatsby
 
 # vuepress build output
 
@@ -608,5 +610,7 @@ fabric.properties
 ### AndroidStudio Patch ###
 
 !/gradle/wrapper/gradle-wrapper.jar
+app/
+.shadow-cljs/
 
 # End of https://www.gitignore.io/api/node,java,react,xcode,macos,emacs,clojure,android,leiningen,reactnative,androidstudio
