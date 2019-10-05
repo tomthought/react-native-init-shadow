@@ -1,14 +1,17 @@
-# react-native-init
+# react-native-init-shadow
 
-A Clojure library designed to ... well, that part is up to you.
+Initialize shadow-cljs projects to target react-native. This project uses the existing `react-native init` cli to generate the project's base.
 
 ## Usage
 
-FIXME
+At the moment, the only way to use this project is to clone it and run the `-main` function:
+```clojure
+(-main "MyAwesomeProject")
+```
 
 ## License
 
-Copyright © 2019 FIXME
+Copyright © 2019 Tom Goldsmith
 
 This program and the accompanying materials are made available under the
 terms of the Eclipse Public License 2.0 which is available at
