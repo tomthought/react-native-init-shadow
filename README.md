@@ -1,4 +1,4 @@
-# react-native-init
+# react-native-init-shadow
 
 Initialize shadow-cljs projects to target react-native. This project uses the existing `react-native init` cli to generate the project's base.
 
