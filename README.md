@@ -1,17 +1,37 @@
 # react-native-init-shadow
 
-Initialize shadow-cljs projects to target react-native. This project uses the existing `react-native init` cli to generate the project's base.
+Initialize shadow-cljs projects to target react-native. This project
+uses the existing `react-native init` cli to generate the project's
+base, and will generate the project using the latest stable
+react-native version.
 
 ## Usage
 
-At the moment, the only way to use this project is to clone it and run the `-main` function:
-```clojure
-(-main "MyAwesomeProject")
+shadow-cljs and react-native must already be installed.
+
+You can run directly from terminal using leiningen, from within the
+react-native-init-shadow project directory.
+
+```shell
+$ lein run MyAwesomeProject
+```
+
+This will generate your project within the react-native-init-shadow
+directory.
+
+Once the project is setup, you can test it out by running the
+following, assuming terminal on MacOS.
+
+```shell
+$ cd my-awesome-project
+$ npm install
+$ shadow-cljs watch dev
+$ npx react-native run-ios # or npx react-native run-android
 ```
 
 ## License
 
-Copyright © 2019 Tom Goldsmith
+Copyright © 2020 Tom Goldsmith
 
 This program and the accompanying materials are made available under the
 terms of the Eclipse Public License 2.0 which is available at

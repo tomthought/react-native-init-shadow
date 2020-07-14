@@ -1,22 +1,14 @@
 {:source-paths ["src"]
- :dependencies [[reagent "0.8.1"
-                 :exclusions [cljsjs/react
-                              cljsjs/react-dom
-                              cljsjs/react-dom-server
-                              cljsjs/create-react-class]]
-                [re-frame "0.10.6"]]
+ :dependencies [[reagent "1.0.0-alpha2"]
+                [re-frame "1.0.0-rc6"]]
  :nrepl {:port 3334}
- :builds {:app
-          {:target :react-native
-           :init-fn {{clj-project-name}}.core/init
-           :output-dir "app"
-           :devtools {:autoload true}
-           :closure-defines {"goog.DEBUG" true}}
-          :min
-          {:target :react-native
-           :init-fn {{clj-project-name}}.core/init
-           :closure-defines {"goog.DEBUG" false}
-           :output-dir "app"
-           :compiler-options {:optimizations :advanced
-                              :infer-externs :auto
-                              :pseudo-names true}}}}
+ :builds {:dev {:target :react-native
+                :init-fn {{clj-project-name}}.core/init
+                :output-dir "app"
+                :devtools {:autoload true}
+                :closure-defines {"goog.DEBUG" true}}
+          :min {:target :react-native
+                :init-fn {{clj-project-name}}.core/init
+                :closure-defines {"goog.DEBUG" false}
+                :output-dir "app"
+                :compiler-options {:optimizations :advanced}}}}

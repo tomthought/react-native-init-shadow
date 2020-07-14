@@ -55,13 +55,15 @@
         (log "Installing react-dom...")
         @(crusta/run (format "npm --prefix ./%s install react-dom" clj-project-name))
         (log "Copying cljs template files...")
-        (let [stencilize #(stencil/render-string
-                           %
-                           {:clj-project-name clj-project-name
-                            :react-native-module-name react-native-module-name})]
+        (let [stencil-props {:clj-project-name clj-project-name
+                             :react-native-module-name react-native-module-name}
+              stencilize #(stencil/render-string % stencil-props)
+              stencilize-underscored #(stencil/render-string
+                                       % (update stencil-props :clj-project-name
+                                                 inflections/underscore))]
           (doseq [template-file (template-files)]
             (let [contents (stencilize (slurp template-file))
-                  filename (stencilize
+                  filename (stencilize-underscored
                             (st/replace
                              (str template-file)
                              (re-pattern template-directory)
