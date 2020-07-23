@@ -7,8 +7,8 @@
                 :output-dir "app"
                 :devtools {:autoload true}
                 :closure-defines {"goog.DEBUG" true}}
-          :min {:target :react-native
-                :init-fn {{clj-project-name}}.core/init
-                :closure-defines {"goog.DEBUG" false}
-                :output-dir "app"
-                :compiler-options {:optimizations :advanced}}}}
+          :prod {:target :react-native
+                 :init-fn {{clj-project-name}}.core/init
+                 :closure-defines {"goog.DEBUG" false}
+                 :output-dir "app"
+                 :compiler-options {:optimizations :advanced}}}}
