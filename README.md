@@ -27,6 +27,11 @@ $ npx react-native-init-shadow MyProjectName --version 0.62.2
 $ npx react-native-init-shadow MyProjectName --platform desktop|mobile
 ```
 
+```shell
+# Set the package name for Android
+$ npx react-native-init-shadow MyProjectName --package com.mycompany.MyProjectName
+```
+
 ## License
 
 Copyright © 2020 Tom Goldsmith
