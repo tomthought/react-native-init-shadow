@@ -9,24 +9,22 @@ react-native version.
 
 shadow-cljs and react-native must already be installed.
 
-You can run directly from terminal using leiningen, from within the
-react-native-init-shadow project directory.
-
 ```shell
-$ lein run MyAwesomeProject
+$ npx react-native-init-shadow MyProjectName
 ```
 
-This will generate your project within the react-native-init-shadow
-directory.
-
-Once the project is setup, you can test it out by running the
-following, assuming terminal on MacOS.
+Options 
 
 ```shell
-$ cd my-awesome-project
-$ npm install
-$ shadow-cljs watch dev
-$ npx react-native run-ios # or npx react-native run-android
+# Install a specific react-native version. Note that
+# react-native-windows may not work with the latest RN.
+$ npx react-native-init-shadow MyProjectName --version 0.62.2
+```
+
+```shell
+# Generate a desktop (windows + macos) project, or a mobile (ios +
+# android) project.
+$ npx react-native-init-shadow MyProjectName --platform desktop|mobile
 ```
 
 ## License

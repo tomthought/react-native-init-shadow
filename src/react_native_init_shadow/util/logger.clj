@@ -13,7 +13,7 @@
                       (.setContext logger-context)
                       (.setLayout (doto (PatternLayout.)
                                     (.setContext logger-context)
-                                    (.setPattern "%date{\"yyyy-MM-dd'T'HH:mm:ss,SSSXXX\", UTC} %level %logger{50} %msg%n")
+                                    (.setPattern "%date{\"yyyy-MM-dd'T'HH:mm:ss,SSSXXX\", UTC} %level %msg%n")
                                     (.start)))
                       (.start)))
       (.setLevel (condp = level

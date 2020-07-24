@@ -1,0 +1,30 @@
+{
+    "name": "react-native-init-shadow",
+    "author": {
+        "name": "Tom Goldsmith",
+        "email": "goldsmith.tee@gmail.com",
+        "url": "https://github.com/tomthought"
+    },
+    "bin": {
+        "react-native-init-shadow": "./main.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/tomthought/react-native-init-shadow.git"
+    },
+    "dependencies": {},
+    "description": "Initialize shadow-cljs projects to target react-native. This project uses the existing `react-native-init` cli to generate the project's base, and will generate the project using the latest stable react-native version.",
+    "keywords": [
+        "clojurescript",
+        "cljs",
+        "shadow-cljs",
+        "react-native"
+    ],
+    "license": "MIT",
+    "main": "./main.js",
+    "version": "0.1.3",
+    "bugs": {
+        "url": "https://github.com/tomthought/react-native-init-shadow/issues"
+    },
+    "homepage": "https://github.com/tomthought/react-native-init-shadow#readme"
+}
