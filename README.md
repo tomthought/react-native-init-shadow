@@ -28,8 +28,9 @@ $ npx react-native-init-shadow MyProjectName --platform desktop|mobile
 ```
 
 ```shell
-# Set the package name for Android
-$ npx react-native-init-shadow MyProjectName --package com.mycompany.MyProjectName
+# Set the package name for Android. ApplicationId will be
+# com.mycompany.myprojectname
+$ npx react-native-init-shadow com.mycompany/MyProjectName
 ```
 
 ## License
