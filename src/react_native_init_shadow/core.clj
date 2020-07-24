@@ -8,7 +8,11 @@
             [malli.error :as me]
             [clojure.tools.cli :as cli]
             [clojure.tools.logging :as log]
-            [clojure.string :as st]))
+            [clojure.string :as st]
+            [clojure.java.io :as io])
+  (:gen-class))
+
+(def latest-windows-react-native-version "0.62.2")
 
 (defn validator
   [schema error-message]
@@ -51,8 +55,10 @@
   @(crusta/run (format "rm -rf %s/__tests__" clj-project-name))
   @(crusta/run (format "rm %s/App.js" clj-project-name))
   @(crusta/run (format "rm %s/index.js" clj-project-name))
-  (log/info "Installing react-dom...")
+  (log/info "Installing react and react-dom...")
   @(crusta/run (format "npm --prefix ./%s install react-dom" clj-project-name))
+  @(crusta/run (format "npm --prefix ./%s uninstall react" clj-project-name))
+  @(crusta/run (format "npm --prefix ./%s install react" clj-project-name))
   (log/info "Copying cljs template files...")
   (let [stencil-props {:clj-project-name clj-project-name
                        :react-native-module-name react-native-module-name}
@@ -75,8 +81,6 @@
         @(crusta/run (format "mkdir -p %s" directories))
         (spit filename contents))))
   (log/info (format "Project '%s' setup successfully!" clj-project-name)))
-
-(def latest-windows-react-native-version "0.62.2")
 
 (defmethod init-react-native :desktop
   [{:keys [clj-project-name react-native-module-name version] :as options}]
@@ -110,6 +114,10 @@
       (try
         (let [clj-project-name (inflections/hyphenate project-name)
               react-native-module-name (inflections/camel-case clj-project-name :upper)]
+          (when (.exists (io/file clj-project-name))
+            (throw (ex-info "Can not overwrite existing directory" {:directory clj-project-name})))
+          (when (.exists (io/file react-native-module-name))
+            (throw (ex-info "Can not overwrite existing directory" {:directory react-native-module-name})))
           (init-react-native
            (assoc options
                   :clj-project-name clj-project-name
