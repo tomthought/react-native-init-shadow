@@ -1,6 +1,5 @@
 (ns react-native-init-shadow.core
   (:require [react-native-init-shadow.util.logger :as logger]
-            [react-native-init-shadow.util.template :as template]
             [crusta.core :as crusta]
             [inflections.core :as inflections]
             [stencil.core :as stencil]
@@ -13,6 +12,14 @@
   (:gen-class))
 
 (def latest-windows-react-native-version "0.62.2")
+
+(def template-directory "template")
+(def template-files
+  ["index.js"
+   {:read "gitignore" :write ".gitignore"}
+   "shadow-cljs.edn"
+   "src/{{clj-project-name}}/core.cljs"
+   "README.md"])
 
 (defn validator
   [schema error-message]
@@ -73,18 +80,21 @@
         stencilize-underscored #(stencil/render-string
                                  % (update stencil-props :clj-project-name
                                            inflections/underscore))]
-    (doseq [template-file (template/template-files)]
-      (let [contents (stencilize (slurp template-file))
-            filename (stencilize-underscored
-                      (st/replace
-                       (str template-file)
-                       (re-pattern template/template-directory)
-                       clj-project-name))
-            segments (st/split filename #"/")
-            directories (st/join "/"
-                                 (if (re-find #"\." (last segments))
-                                   (drop-last segments)
-                                   segments))]
+    (doseq [template-file template-files]
+      (let [{:keys [read write]} (if (string? template-file)
+                                   {:read template-file
+                                    :write template-file}
+                                   template-file)
+            contents (->> (str template-directory "/" read)
+                          (io/resource)
+                          (slurp)
+                          (stencilize))
+            filename (stencilize-underscored (str clj-project-name "/" write))
+            segments (filter seq (st/split filename #"/"))
+            directories (st/join
+                         "/" (if (re-find #"\." (last segments))
+                               (drop-last segments)
+                               segments))]
         @(crusta/run (format "mkdir -p %s" directories))
         (spit filename contents))))
   (log/info (format "Project '%s' setup successfully!" clj-project-name)))
