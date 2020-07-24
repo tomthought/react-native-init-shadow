@@ -42,7 +42,7 @@
 (defmulti init-react-native (fn [{:keys [platform]}] platform))
 
 (defmethod init-react-native :mobile
-  [{:keys [clj-project-name react-native-module-name version]}]
+  [{:keys [clj-project-name react-native-module-name version package-name]}]
   (log/info (format "Setting up project '%s'" clj-project-name))
   (exec (apply format
                (str "react-native init %s --directory %s"
@@ -51,6 +51,13 @@
                 [react-native-module-name
                  clj-project-name]
                 (when version [version]))))
+  (when package-name
+    (let [package-name (str package-name "." react-native-module-name)]
+      (log/info (format "Setting package name '%s'." package-name))
+      @(crusta/run (format "npx react-native-rename %s -b %s" (str react-native-module-name "Temp") package-name)
+         :directory react-native-module-name)
+      @(crusta/run (format "npx react-native-rename %s -b %s" react-native-module-name package-name)
+         :directory react-native-module-name)))
   @(crusta/run (format "mv %s %s" react-native-module-name clj-project-name))
   @(crusta/run (format "rm -rf %s/__tests__" clj-project-name))
   @(crusta/run (format "rm %s/App.js" clj-project-name))
@@ -103,6 +110,11 @@
   (logger/init-logger :info)
   (let [{:keys [arguments options summary errors] :as parsed} (cli/parse-opts args cli-opts)
         project-name (st/trim (str (first arguments)))
+        names (st/split project-name #"/")
+        [package-name project-name] (condp = (count names)
+                                      1 [nil (first names)]
+                                      2 names
+                                      (throw (ex-info "Invalid project name" {:project-name project-name})))
         errors (not-empty
                 (concat
                  (when (not (seq project-name))
@@ -121,7 +133,8 @@
           (init-react-native
            (assoc options
                   :clj-project-name clj-project-name
-                  :react-native-module-name react-native-module-name)))
+                  :react-native-module-name react-native-module-name
+                  :package-name package-name)))
         (catch Exception e
           (let [message (format "An error occurred setting up the project: %s" (.getLocalizedMessage e))]
             (if-let [data (ex-data e)]

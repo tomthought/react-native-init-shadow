@@ -1,9 +1,11 @@
+#!/usr/bin/env node
+
+const fs = require('fs');
+const path = require('path');
 const { spawn } = require("child_process");
-
-console.log(process.argv);
-
+const jarPath = path.resolve(__dirname, "react-native-init-shadow.jar");
 const args = process.argv.slice(2);
-const cmd = spawn("java", ["-jar", "react-native-init-shadow.jar"].concat(args));
+const cmd = spawn("java", ["-jar", jarPath].concat(args));
 
 cmd.stdout.on("data", data => {
     console.log(`${data}`.trim());
