@@ -15,8 +15,6 @@ already installed
 
 ## Usage
 
-shadow-cljs and react-native must already be installed.
-
 ```shell
 $ npx react-native-init-shadow MyProjectName
 ```
