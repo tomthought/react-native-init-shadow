@@ -5,6 +5,14 @@ uses the existing `react-native-init` cli to generate the project's
 base, and will generate the project using the latest stable
 react-native version.
 
+## Dependencies
+
+In order for the react-native project generator to work, you must have
+already installed
+[shadow-cljs](https://github.com/thheller/shadow-cljs),
+[react-native](https://reactnative.dev/docs/getting-started), and
+[CocoaPods](https://guides.cocoapods.org/using/getting-started.html).
+
 ## Usage
 
 shadow-cljs and react-native must already be installed.
