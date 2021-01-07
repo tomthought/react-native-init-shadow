@@ -52,7 +52,7 @@
   [{:keys [clj-project-name react-native-module-name version package-name]}]
   (log/info (format "Setting up project '%s'" clj-project-name))
   (exec (apply format
-               (str "react-native init %s --directory %s"
+               (str "npx react-native init %s --directory %s"
                     (when version (str " --version %s")))
                (concat
                 [react-native-module-name
