@@ -1,7 +1,7 @@
 (ns react-native-init-shadow.core
   (:require [react-native-init-shadow.util.logger :as logger]
             [crusta.core :as crusta]
-            [clojure.data.json :as json]
+            [cheshire.core :as json]
             [inflections.core :as inflections]
             [stencil.core :as stencil]
             [malli.core :as m]
@@ -49,7 +49,7 @@
 
 (defn package-json
   [project-name]
-  (json/read-str (slurp (format "%s/package.json" project-name))))
+  (json/parse-string (slurp (format "%s/package.json" project-name))))
 
 (defn react-version
   [project-name]
@@ -61,8 +61,9 @@
 
 (defn write-package-json
   [project-name package-json]
-  (spit (format "%s/package.json" project-name)
-        (with-out-str (json/pprint package-json))))
+  (->> {:pretty (json/create-pretty-printer {:object-field-value-separator ": "})}
+       (json/generate-string package-json)
+       (spit (format "%s/package.json" project-name))))
 
 (defmulti init-react-native (fn [{:keys [platform]}] platform))
 
