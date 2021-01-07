@@ -22,7 +22,7 @@
     ],
     "license": "MIT",
     "main": "./main.js",
-    "version": "0.1.10",
+    "version": "0.1.11",
     "bugs": {
         "url": "https://github.com/tomthought/react-native-init-shadow/issues"
     },

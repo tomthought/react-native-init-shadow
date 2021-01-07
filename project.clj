@@ -1,8 +1,9 @@
-(defproject react-native-init-shadow "0.1.10"
+(defproject react-native-init-shadow "0.1.11"
   :license {:name "MIT"
             :url "https://www.eclipse.org/legal/epl-2.0/"}
   :dependencies [[org.clojure/clojure "1.10.1"]
                  [org.clojure/tools.cli "1.0.194"]
+                 [org.clojure/data.json "1.0.0"]
                  [com.7theta/utilis "1.10.0"]
                  [com.7theta/crusta "0.3.1"]
                  [metosin/malli "0.2.1"]
