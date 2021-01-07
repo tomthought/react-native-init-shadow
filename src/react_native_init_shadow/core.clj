@@ -1,6 +1,7 @@
 (ns react-native-init-shadow.core
   (:require [react-native-init-shadow.util.logger :as logger]
             [crusta.core :as crusta]
+            [clojure.data.json :as json]
             [inflections.core :as inflections]
             [stencil.core :as stencil]
             [malli.core :as m]
@@ -46,6 +47,27 @@
     @stdout
     @stderr))
 
+(defn package-json
+  [project-name]
+  (json/read-str (slurp (format "%s/package.json" project-name))))
+
+(defn react-version
+  [project-name]
+  (get-in (package-json project-name) ["dependencies" "react"]))
+
+(defn set-dependency-version
+  [project-name dependency version]
+  (assoc-in (package-json project-name) ["dependencies" dependency] version))
+
+(defn write-package-json
+  [project-name package-json]
+  (spit (format "%s/package.json" project-name)
+        (with-out-str (json/pprint package-json))))
+
+(defn update-package-json-deps!
+  [project-name]
+  (exec "npx npm-check-updates -u --packageFile package.json" :directory project-name))
+
 (defmulti init-react-native (fn [{:keys [platform]}] platform))
 
 (defmethod init-react-native :mobile
@@ -69,10 +91,10 @@
   @(crusta/run (format "rm -rf %s/__tests__" clj-project-name))
   @(crusta/run (format "rm %s/App.js" clj-project-name))
   @(crusta/run (format "rm %s/index.js" clj-project-name))
-  (log/info "Installing react and react-dom...")
-  @(crusta/run (format "npm --prefix ./%s install react-dom" clj-project-name))
-  @(crusta/run (format "npm --prefix ./%s uninstall react" clj-project-name))
-  @(crusta/run (format "npm --prefix ./%s install react" clj-project-name))
+  (->> (react-version clj-project-name)
+       (set-dependency-version clj-project-name "react-dom")
+       (write-package-json clj-project-name))
+  (update-package-json-deps! clj-project-name)
   (log/info "Copying cljs template files...")
   (let [stencil-props {:clj-project-name clj-project-name
                        :react-native-module-name react-native-module-name}
@@ -97,7 +119,12 @@
                                segments))]
         @(crusta/run (format "mkdir -p %s" directories))
         (spit filename contents))))
-  (log/info (format "Project '%s' setup successfully!" clj-project-name)))
+  (log/info (format "Project '%s' setup successfully!" clj-project-name))
+  (log/info "To run your project: ")
+  (log/info (format "$ cd %s" clj-project-name))
+  (log/info "$ npm install")
+  (log/info "$ shadow-cljs watch dev")
+  (log/info "$ npx react-native run-ios # npx react-native run-android"))
 
 (defmethod init-react-native :desktop
   [{:keys [clj-project-name react-native-module-name version] :as options}]
@@ -109,9 +136,11 @@
   (log/info "Initializing desktop project...")
   (exec "npx react-native-macos-init" :directory clj-project-name)
   (exec "npx react-native-windows-init --overwrite" :directory clj-project-name)
+  (update-package-json-deps! clj-project-name)
   (log/info "Initialized desktop project successfully!")
   (log/info "To run your project: ")
   (log/info (format "$ cd %s" clj-project-name))
+  (log/info "$ npm install")
   (log/info "$ shadow-cljs watch dev")
   (log/info "$ npx react-native run-macos # npx react-native run-windows"))
 

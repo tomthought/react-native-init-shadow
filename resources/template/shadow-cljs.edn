@@ -1,6 +1,6 @@
 {:source-paths ["src"]
- :dependencies [[reagent "1.0.0-alpha2"]
-                [re-frame "1.0.0"]]
+ :dependencies [[reagent "1.0.0"]
+                [re-frame "1.1.2"]]
  :nrepl {:port 3334}
  :builds {:dev {:target :react-native
                 :init-fn {{clj-project-name}}.core/init

@@ -9,8 +9,7 @@ react-native version.
 
 In order for the react-native project generator to work, you must have
 already installed
-[shadow-cljs](https://github.com/thheller/shadow-cljs),
-[react-native](https://reactnative.dev/docs/getting-started), and
+[shadow-cljs](https://github.com/thheller/shadow-cljs), and
 [CocoaPods](https://guides.cocoapods.org/using/getting-started.html).
 
 ## Usage
