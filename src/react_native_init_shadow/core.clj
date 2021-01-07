@@ -64,10 +64,6 @@
   (spit (format "%s/package.json" project-name)
         (with-out-str (json/pprint package-json))))
 
-(defn update-package-json-deps!
-  [project-name]
-  (exec "npx npm-check-updates -u --packageFile package.json" :directory project-name))
-
 (defmulti init-react-native (fn [{:keys [platform]}] platform))
 
 (defmethod init-react-native :mobile
@@ -94,7 +90,6 @@
   (->> (react-version clj-project-name)
        (set-dependency-version clj-project-name "react-dom")
        (write-package-json clj-project-name))
-  (update-package-json-deps! clj-project-name)
   (log/info "Copying cljs template files...")
   (let [stencil-props {:clj-project-name clj-project-name
                        :react-native-module-name react-native-module-name}
@@ -136,7 +131,6 @@
   (log/info "Initializing desktop project...")
   (exec "npx react-native-macos-init" :directory clj-project-name)
   (exec "npx react-native-windows-init --overwrite" :directory clj-project-name)
-  (update-package-json-deps! clj-project-name)
   (log/info "Initialized desktop project successfully!")
   (log/info "To run your project: ")
   (log/info (format "$ cd %s" clj-project-name))
