@@ -12,8 +12,6 @@
             [clojure.java.io :as io])
   (:gen-class))
 
-(def latest-windows-react-native-version "0.62.2")
-
 (def template-directory "template")
 (def template-files
   ["index.js"
@@ -27,12 +25,7 @@
   [(m/validator schema) error-message])
 
 (def cli-opts
-  [["-version" "--version VERSION"]
-   ["-platform" "--platform PLATFORM"
-    :default :mobile
-    :parse-fn (comp keyword st/lower-case)
-    :validate (validator [:enum :mobile :desktop]
-                         "Must be one of 'mobile', 'desktop'.")]])
+  [["-version" "--version VERSION"]])
 
 (defn exec
   [command & options]
@@ -71,26 +64,20 @@
   [{:keys [clj-project-name react-native-module-name version package-name]}]
   (log/info (format "Setting up project '%s'" clj-project-name))
   (exec (apply format
-               (str "npx react-native init %s --directory %s"
+               (str "npx react-native@latest init %s --directory %s"
                     (when version (str " --version %s")))
                (concat
                 [react-native-module-name
                  clj-project-name]
                 (when version [version]))))
   (when package-name
-    (let [package-name (str package-name "." react-native-module-name)]
+    (let [package-name (str package-name "." (st/lower-case react-native-module-name))]
       (log/info (format "Setting package name '%s'." package-name))
-      @(crusta/run (format "npx react-native-rename %s -b %s" (str react-native-module-name "Temp") package-name)
-         :directory react-native-module-name)
-      @(crusta/run (format "npx react-native-rename %s -b %s" react-native-module-name package-name)
-         :directory react-native-module-name)))
-  @(crusta/run (format "mv %s %s" react-native-module-name clj-project-name))
+      @(crusta/run (format "npx react-native-rename@latest %s -b %s" react-native-module-name package-name)
+         :directory clj-project-name)))
   @(crusta/run (format "rm -rf %s/__tests__" clj-project-name))
   @(crusta/run (format "rm %s/App.js" clj-project-name))
   @(crusta/run (format "rm %s/index.js" clj-project-name))
-  (->> (react-version clj-project-name)
-       (set-dependency-version clj-project-name "react-dom")
-       (write-package-json clj-project-name))
   (log/info "Copying cljs template files...")
   (let [stencil-props {:clj-project-name clj-project-name
                        :react-native-module-name react-native-module-name}
@@ -119,25 +106,9 @@
   (log/info "To run your project: ")
   (log/info (format "$ cd %s" clj-project-name))
   (log/info "$ npm install")
+  (log/info "$ npx pod-install")
   (log/info "$ shadow-cljs watch dev")
   (log/info "$ npx react-native run-ios # npx react-native run-android"))
-
-(defmethod init-react-native :desktop
-  [{:keys [clj-project-name react-native-module-name version] :as options}]
-  (init-react-native
-   (cond-> (assoc options
-                  :platform :mobile
-                  :version latest-windows-react-native-version)
-     version (assoc :version version)))
-  (log/info "Initializing desktop project...")
-  (exec "npx react-native-macos-init" :directory clj-project-name)
-  (exec "npx react-native-windows-init --overwrite" :directory clj-project-name)
-  (log/info "Initialized desktop project successfully!")
-  (log/info "To run your project: ")
-  (log/info (format "$ cd %s" clj-project-name))
-  (log/info "$ npm install")
-  (log/info "$ shadow-cljs watch dev")
-  (log/info "$ npx react-native run-macos # npx react-native run-windows"))
 
 (defn -main
   [& args]
@@ -166,6 +137,7 @@
             (throw (ex-info "Can not overwrite existing directory" {:directory react-native-module-name})))
           (init-react-native
            (assoc options
+                  :platform :mobile
                   :clj-project-name clj-project-name
                   :react-native-module-name react-native-module-name
                   :package-name package-name)))

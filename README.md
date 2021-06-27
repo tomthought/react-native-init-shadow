@@ -27,12 +27,6 @@ $ npx react-native-init-shadow MyProjectName --version 0.62.2
 ```
 
 ```shell
-# Generate a desktop (windows + macos) project, or a mobile (ios +
-# android) project.
-$ npx react-native-init-shadow MyProjectName --platform desktop|mobile
-```
-
-```shell
 # Set the package name for Android. ApplicationId will be
 # com.mycompany.myprojectname
 $ npx react-native-init-shadow com.mycompany/MyProjectName
